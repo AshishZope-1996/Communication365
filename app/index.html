@@ -8,7 +8,7 @@
     <title>Communication360 | Campaign workspace</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=2">
 </head>
 
 <body class="page-body">
@@ -20,16 +20,19 @@
 
     <div class="app-shell">
         <aside class="app-sidebar" aria-label="Primary navigation">
-            <a class="brand-mark" href="#overview">
+            <div class="sidebar-brand-row">
+            <a class="brand-mark" href="#overview" aria-label="Communication360 overview">
                 <span class="brand-logo"><i class="fa-solid fa-paper-plane"></i></span>
                 <span><strong>Communication</strong><small>360 campaign studio</small></span>
             </a>
+            <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Collapse navigation" aria-expanded="true" title="Collapse navigation"><i class="fa-solid fa-angles-left"></i></button>
+            </div>
             <div class="sidebar-label">Workspace</div>
             <nav class="page-nav">
-                <a class="nav-link active" href="#overview"><i class="fa-solid fa-grid-2"></i> Overview</a>
-                <a class="nav-link" href="#create-campaign"><i class="fa-solid fa-pen-to-square"></i> Create campaign</a>
-                <a class="nav-link" href="#history"><i class="fa-solid fa-clock-rotate-left"></i> Campaign history</a>
-                <a class="nav-link" href="#quick-actions"><i class="fa-solid fa-address-book"></i> Contacts & tools</a>
+                <a class="nav-link active" href="#overview" title="Overview" aria-label="Overview"><i class="fa-solid fa-grid-2"></i><span>Overview</span></a>
+                <a class="nav-link" href="#create-campaign" title="Create campaign" aria-label="Create campaign"><i class="fa-solid fa-pen-to-square"></i><span>Create campaign</span></a>
+                <a class="nav-link" href="#history" title="Campaign history" aria-label="Campaign history"><i class="fa-solid fa-clock-rotate-left"></i><span>Campaign history</span></a>
+                <a class="nav-link" href="#quick-actions" title="Contacts & tools" aria-label="Contacts & tools"><i class="fa-solid fa-address-book"></i><span>Contacts &amp; tools</span></a>
             </nav>
             <div class="sidebar-footer">
                 <span class="status-dot"></span>
@@ -46,6 +49,7 @@
                 </div>
                 <div class="dashboard-actions">
                     <span class="version-pill">v2.1.0</span>
+                    <button class="secondary-button intake-action" id="openIntakeBtn" type="button"><i class="fa-solid fa-clipboard-list"></i> Intake form</button>
                     <button class="primary-action" id="addCampaignBtn" type="button"><i class="fa-solid fa-plus"></i> New campaign</button>
                     <button class="icon-button" id="newCampaignPresetBtn" type="button" aria-label="Reset campaign form" title="Reset form"><i class="fa-solid fa-arrow-rotate-left"></i></button>
                 </div>
@@ -102,6 +106,48 @@
     <div class="preview-modal" id="previewModal" hidden role="dialog" aria-modal="true" aria-labelledby="previewTitle">
         <div class="preview-dialog"><div class="preview-header"><div><span class="eyebrow">LIVE RENDER</span><h2 id="previewTitle">Email preview</h2></div><div class="preview-controls"><button class="preview-mode active" data-preview-mode="desktop" type="button">Desktop</button><button class="preview-mode" data-preview-mode="tablet" type="button">Tablet</button><button class="preview-mode" data-preview-mode="mobile" type="button">Mobile</button><button class="icon-button" id="closePreviewBtn" type="button" aria-label="Close preview"><i class="fa-solid fa-xmark"></i></button></div></div><div class="email-client"><div class="email-meta"><span class="avatar"><i class="fa-solid fa-paper-plane"></i></span><div><strong>Communication360</strong><small id="previewSubject">Select a template to preview</small></div><time>Now</time></div><div class="preview-stage"><iframe id="emailPreviewFrame" title="Rendered email preview" sandbox=""></iframe></div></div></div>
     </div>
+
+    <div class="workspace-modal" id="intakeModal" hidden role="dialog" aria-modal="true" aria-labelledby="intakeTitle">
+        <section class="workspace-dialog intake-dialog">
+            <header class="modal-header"><div><span class="eyebrow">CAMPAIGN BRIEF</span><h2 id="intakeTitle">Communication intake</h2><p>Share a few details to help shape your next communication.</p></div><button class="icon-button modal-close" type="button" data-close-modal aria-label="Close intake form"><i class="fa-solid fa-xmark"></i></button></header>
+            <form id="intakeForm" novalidate>
+                <div class="modal-form-body">
+                    <section class="form-section"><div class="form-section-heading"><span class="section-number">01</span><div><h3>About you</h3><p>Who should we contact about this request?</p></div></div>
+                        <div class="modal-form-grid"><div class="form-group"><label class="form-label" for="intakeName">Your name <span>*</span></label><input id="intakeName" name="name" autocomplete="name" required aria-describedby="intakeNameError"><small class="field-error" id="intakeNameError"></small></div>
+                        <div class="form-group"><label class="form-label" for="intakeEmail">Work email <span>*</span></label><input id="intakeEmail" name="email" type="email" autocomplete="email" required aria-describedby="intakeEmailError"><small class="field-error" id="intakeEmailError"></small></div>
+                        <div class="form-group full-width"><label class="form-label" for="intakeOrganization">Organization</label><input id="intakeOrganization" name="organization" autocomplete="organization" placeholder="Company or team name"></div></div>
+                    </section>
+                    <section class="form-section"><div class="form-section-heading"><span class="section-number">02</span><div><h3>Campaign goals</h3><p>Describe the audience and the outcome you are looking for.</p></div></div>
+                        <div class="modal-form-grid"><div class="form-group full-width"><label class="form-label" for="intakeGoal">Communication objective <span>*</span></label><textarea id="intakeGoal" name="goal" rows="3" required placeholder="What would you like this communication to achieve?" aria-describedby="intakeGoalError"></textarea><small class="field-error" id="intakeGoalError"></small></div>
+                        <div class="form-group"><label class="form-label" for="intakeAudience">Target audience</label><input id="intakeAudience" name="audience" placeholder="e.g. customers, partners"></div>
+                        <div class="form-group"><label class="form-label" for="intakeChannel">Preferred channel</label><select id="intakeChannel" name="channel"><option value="">Select a channel</option><option>Email</option><option>WhatsApp</option><option>LinkedIn</option><option>Not sure yet</option></select></div>
+                        <div class="form-group"><label class="form-label" for="intakeTimeline">Target timeline</label><input id="intakeTimeline" name="timeline" type="date"></div>
+                        <div class="form-group full-width"><label class="form-label" for="intakeNotes">Additional context</label><textarea id="intakeNotes" name="notes" rows="3" placeholder="Anything else we should know?"></textarea></div></div>
+                    </section>
+                    <p class="form-note">Saved in this browser only. This intake will not create or send a campaign.</p>
+                    <p class="form-error-summary" id="intakeFormError" role="alert" hidden>Please review the highlighted fields.</p>
+                </div>
+                <footer class="modal-footer"><button class="secondary-button" type="button" data-close-modal>Cancel</button><button class="save-button" id="saveIntakeBtn" type="submit"><i class="fa-solid fa-check"></i> Save intake</button></footer>
+            </form>
+        </section>
+    </div>
+
+    <div class="workspace-modal" id="recipientModal" hidden role="dialog" aria-modal="true" aria-labelledby="recipientTitle">
+        <section class="workspace-dialog compact-dialog">
+            <header class="modal-header"><div><span class="eyebrow">CONTACTS</span><h2 id="recipientTitle">Add recipient</h2><p>Save a contact to your local recipient list.</p></div><button class="icon-button modal-close" type="button" data-close-modal aria-label="Close add recipient"><i class="fa-solid fa-xmark"></i></button></header>
+            <form id="recipientForm" novalidate><div class="modal-form-body modal-form-grid">
+                <div class="form-group full-width"><label class="form-label" for="recipientName">Name <span>*</span></label><input id="recipientName" name="name" autocomplete="name" required aria-describedby="recipientNameError"><small class="field-error" id="recipientNameError"></small></div>
+                <div class="form-group full-width"><label class="form-label" for="recipientEmail">Email <span>*</span></label><input id="recipientEmail" name="email" type="email" autocomplete="email" required aria-describedby="recipientEmailError"><small class="field-error" id="recipientEmailError"></small></div>
+                <p class="form-error-summary" id="recipientFormError" role="alert" hidden>Please review the highlighted fields.</p>
+            </div><footer class="modal-footer"><button class="secondary-button" type="button" data-close-modal>Cancel</button><button class="save-button" type="submit"><i class="fa-solid fa-user-plus"></i> Save recipient</button></footer></form>
+        </section>
+    </div>
+
+    <div class="workspace-modal confirmation-modal" id="campaignConfirmModal" hidden role="dialog" aria-modal="true" aria-labelledby="campaignConfirmTitle" aria-describedby="campaignConfirmMessage">
+        <section class="workspace-dialog compact-dialog"><div class="confirmation-icon"><i class="fa-solid fa-paper-plane"></i></div><h2 id="campaignConfirmTitle">Confirm campaign</h2><p id="campaignConfirmMessage"></p><footer class="modal-footer"><button class="secondary-button" id="cancelCampaignConfirm" type="button">Cancel</button><button class="save-button" id="approveCampaignConfirm" type="button"><i class="fa-solid fa-paper-plane"></i> Send campaign</button></footer></section>
+    </div>
+
+    <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="false"></div>
 
     <script src="js/data-store.js"></script><script src="js/ui.js"></script><script src="js/dashboard-stats.js?v=2"></script><script src="js/campaign.js?v=4"></script>
 </body>

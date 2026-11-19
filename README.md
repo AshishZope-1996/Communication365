@@ -49,11 +49,11 @@ control. For Gmail SMTP, use an application password and store it in
 The startup script installs the packages listed in `requirements.txt`. Start
 the portal with the environment variables configured in `.env`:
 
-1. A static server in `app` (for example, `python -m http.server 8000`).
+1. A static server in the project root (for example, `python -m http.server 3000`).
 2. The campaign API in `Wrapper` (`python campaign_api.py`).
 3. The dashboard stats API in `Wrapper` (`python dashboard_stats_api.py`).
 
-Open `http://127.0.0.1:3000/app/index.html`. The campaign API listens on port 8001;
+Open `http://127.0.0.1:3000/app/index.html#create-campaign`. The campaign API listens on port 8001;
 the catalog is unavailable until it can connect to PostgreSQL.
 
 The workspace includes a read-only template preview at

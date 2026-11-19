@@ -7,7 +7,6 @@ echo ============================================
 
 :: Project Paths
 set PROJECT_PATH=C:\Users\zope1\OneDrive\Desktop\Repo\Communication365
-set APP_PATH=%PROJECT_PATH%\app
 set WRAPPER_PATH=%PROJECT_PATH%\Wrapper
 
 echo.
@@ -26,7 +25,7 @@ if defined PORTAL_ENV_FILE (
 
 echo.
 echo Starting UI Server...
-start "Portal UI" cmd /k "cd /d "%APP_PATH%" && python -m http.server 8000"
+start "Portal UI" cmd /k "cd /d "%PROJECT_PATH%" && python -m http.server 3000"
 
 echo.
 echo Starting Campaign API...
@@ -40,7 +39,7 @@ timeout /t 5 >nul
 
 echo.
 echo Opening Portal...
-start http://127.0.0.1:3000/app/index.html
+start http://127.0.0.1:3000/app/index.html#create-campaign
 
 echo.
 echo ============================================

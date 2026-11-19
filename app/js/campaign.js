@@ -6,6 +6,8 @@ const historyState = {
 };
 
 let lastCampaignHistory = [];
+let campaignConfirmationResolver = null;
+let lastModalTrigger = null;
 
 function safeText(value) {
   return String(value ?? '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -83,7 +85,7 @@ async function openTemplatePreview() {
     return;
   }
 
-  modal.hidden = false;
+  openWorkspaceModal(modal);
   frame.srcdoc = '<p style="font:16px sans-serif;padding:24px;color:#68738d">Generating a secure preview...</p>';
   if (subject) subject.textContent = document.getElementById('campaignSubject')?.value || selected.dataset.subject || 'Campaign message';
   try {
@@ -100,6 +102,7 @@ function closeTemplatePreview() {
   const frame = document.getElementById('emailPreviewFrame');
   if (modal) modal.hidden = true;
   if (frame) frame.srcdoc = '';
+  updateModalScrollLock();
 }
 
 function attachPreviewControls() {
@@ -125,15 +128,135 @@ function attachPreviewControls() {
   });
 }
 
+function updateModalScrollLock() {
+  const hasOpenModal = document.querySelector('.workspace-modal:not([hidden]), .preview-modal:not([hidden])');
+  document.body.classList.toggle('modal-open', Boolean(hasOpenModal));
+}
+
+function openWorkspaceModal(modal) {
+  if (!modal) return;
+  lastModalTrigger = document.activeElement;
+  modal.hidden = false;
+  updateModalScrollLock();
+  modal.querySelector('input, select, textarea, button')?.focus();
+}
+
+function closeWorkspaceModal(modal) {
+  if (!modal) return;
+  modal.hidden = true;
+  updateModalScrollLock();
+  if (!document.body.classList.contains('modal-open')) lastModalTrigger?.focus();
+}
+
+function showToast(message, tone = 'success') {
+  const region = document.getElementById('toastRegion');
+  if (!region) return;
+  const toast = document.createElement('div');
+  const icon = tone === 'error' ? 'fa-circle-exclamation' : tone === 'info' ? 'fa-circle-info' : 'fa-circle-check';
+  toast.className = `toast-message ${tone}`;
+  toast.setAttribute('role', tone === 'error' ? 'alert' : 'status');
+  toast.innerHTML = `<i class="fa-solid ${icon}" aria-hidden="true"></i><span>${safeText(message)}</span>`;
+  region.appendChild(toast);
+  window.setTimeout(() => {
+    toast.classList.add('removing');
+    window.setTimeout(() => toast.remove(), 220);
+  }, 4200);
+}
+
+function attachModalDismissal() {
+  document.querySelectorAll('[data-close-modal]').forEach((button) => {
+    button.addEventListener('click', () => closeWorkspaceModal(button.closest('.workspace-modal')));
+  });
+  document.querySelectorAll('.workspace-modal').forEach((modal) => {
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal && modal.id !== 'campaignConfirmModal') closeWorkspaceModal(modal);
+    });
+  });
+  document.addEventListener('keydown', (event) => {
+    const activeModal = document.querySelector('.workspace-modal:not([hidden])');
+    if (event.key === 'Escape') {
+      if (activeModal?.id === 'campaignConfirmModal') {
+        finishCampaignConfirmation(false);
+      } else if (activeModal) {
+        closeWorkspaceModal(activeModal);
+      }
+      return;
+    }
+    if (event.key === 'Tab' && activeModal) {
+      const focusable = [...activeModal.querySelectorAll('button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [href], [tabindex]:not([tabindex="-1"])')];
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+  });
+}
+
+function initSidebar() {
+  const toggle = document.getElementById('sidebarToggle');
+  let savedState = false;
+  try {
+    savedState = localStorage.getItem('communication360.sidebarCollapsed') === 'true';
+  } catch (error) {
+    showToast('Navigation will use its default expanded state because browser storage is unavailable.', 'info');
+  }
+  document.body.classList.toggle('sidebar-collapsed', savedState);
+  if (toggle) {
+    toggle.setAttribute('aria-expanded', String(!savedState));
+    toggle.setAttribute('aria-label', savedState ? 'Expand navigation' : 'Collapse navigation');
+    toggle.title = savedState ? 'Expand navigation' : 'Collapse navigation';
+    toggle.addEventListener('click', () => {
+      const collapsed = document.body.classList.toggle('sidebar-collapsed');
+      toggle.setAttribute('aria-expanded', String(!collapsed));
+      toggle.setAttribute('aria-label', collapsed ? 'Expand navigation' : 'Collapse navigation');
+      toggle.title = collapsed ? 'Expand navigation' : 'Collapse navigation';
+      try {
+        localStorage.setItem('communication360.sidebarCollapsed', String(collapsed));
+      } catch (error) {
+        showToast('Your navigation preference could not be saved in this browser.', 'error');
+      }
+    });
+  }
+}
+
 function attachWorkspaceNavigation() {
   document.querySelectorAll('[data-scroll-target]').forEach((button) => {
     button.addEventListener('click', () => document.getElementById(button.dataset.scrollTarget)?.scrollIntoView({ behavior: 'smooth' }));
   });
-  document.querySelectorAll('.page-nav .nav-link').forEach((link) => {
+  const navLinks = [...document.querySelectorAll('.page-nav .nav-link')];
+  const setActiveLink = (hash) => {
+    navLinks.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === hash));
+  };
+  const updateActiveLink = () => {
+    setActiveLink(window.location.hash || '#overview');
+  };
+  navLinks.forEach((link) => {
     link.addEventListener('click', () => {
-      document.querySelectorAll('.page-nav .nav-link').forEach((item) => item.classList.toggle('active', item === link));
+      setActiveLink(link.getAttribute('href'));
     });
   });
+  window.addEventListener('hashchange', updateActiveLink);
+  updateActiveLink();
+  const main = document.querySelector('.app-main');
+  const sections = [...document.querySelectorAll('.app-main > section[id]')];
+  if (main) {
+    main.addEventListener('scroll', () => {
+      const bounds = main.getBoundingClientRect();
+      const contentTop = bounds.top + (document.querySelector('.topbar')?.offsetHeight || 0);
+      const current = sections.reduce((selected, section) => {
+        const rect = section.getBoundingClientRect();
+        const visible = Math.max(0, Math.min(rect.bottom, bounds.bottom) - Math.max(rect.top, contentTop));
+        return visible >= selected.visible ? { section, visible } : selected;
+      }, { section: null, visible: 0 }).section;
+      if (current) setActiveLink(`#${current.id}`);
+    }, { passive: true });
+  }
 }
 
 function populateCampaignOptions(data) {
@@ -254,27 +377,137 @@ function saveStoredRecipients(recipients) {
   localStorage.setItem('portalRecipients', JSON.stringify(recipients));
 }
 
-function addRecipientFromPrompt() {
-  const name = window.prompt('Recipient name');
-  if (!name) return;
-  const email = window.prompt('Recipient email');
-  if (!email) return;
+function validateModalForm(fields, summary) {
+  let valid = true;
+  fields.forEach(({ input, message, type }) => {
+    const value = input.value.trim();
+    const error = !value
+      ? 'This field is required.'
+      : type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+        ? 'Enter a valid email address.'
+        : '';
+    const group = input.closest('.form-group');
+    if (group) group.classList.toggle('has-error', Boolean(error));
+    input.setAttribute('aria-invalid', String(Boolean(error)));
+    message.textContent = error;
+    valid = valid && !error;
+  });
+  if (summary) summary.hidden = valid;
+  return valid;
+}
 
-  const recipients = getStoredRecipients();
-  const normalized = { name: name.trim(), email: email.trim() };
+function attachIntakeForm() {
+  const modal = document.getElementById('intakeModal');
+  const form = document.getElementById('intakeForm');
+  const saveButton = document.getElementById('saveIntakeBtn');
+  document.getElementById('openIntakeBtn')?.addEventListener('click', () => openWorkspaceModal(modal));
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const fields = [
+      { input: document.getElementById('intakeName'), message: document.getElementById('intakeNameError') },
+      { input: document.getElementById('intakeEmail'), message: document.getElementById('intakeEmailError'), type: 'email' },
+      { input: document.getElementById('intakeGoal'), message: document.getElementById('intakeGoalError') }
+    ];
+    if (!validateModalForm(fields, document.getElementById('intakeFormError'))) {
+      fields.find(({ input }) => input.getAttribute('aria-invalid') === 'true')?.input.focus();
+      return;
+    }
 
-  if (!normalized.name || !normalized.email) {
-    setStatusMessage('Recipient details are incomplete.', 'error');
-    return;
-  }
+    if (saveButton) {
+      saveButton.disabled = true;
+      saveButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> Saving...';
+    }
+    try {
+      await sleep(250);
+      const stored = JSON.parse(localStorage.getItem('portalIntakeRequests') || '[]');
+      if (!Array.isArray(stored)) throw new Error('Stored intake requests are not a list.');
+      const values = Object.fromEntries(new FormData(form).entries());
+      stored.push({ ...values, submittedAt: new Date().toISOString() });
+      localStorage.setItem('portalIntakeRequests', JSON.stringify(stored));
+      form.reset();
+      fields.forEach(({ input, message }) => {
+        input.removeAttribute('aria-invalid');
+        input.closest('.form-group')?.classList.remove('has-error');
+        message.textContent = '';
+      });
+      document.getElementById('intakeFormError').hidden = true;
+      closeWorkspaceModal(modal);
+      showToast('Your intake form has been saved.', 'success');
+    } catch (error) {
+      showToast('Unable to save the intake form in this browser. Your entries are still available to retry.', 'error');
+    } finally {
+      if (saveButton) {
+        saveButton.disabled = false;
+        saveButton.innerHTML = '<i class="fa-solid fa-check"></i> Save intake';
+      }
+    }
+  });
+}
 
-  const exists = recipients.some((entry) => entry.email.toLowerCase() === normalized.email.toLowerCase());
-  if (!exists) {
-    recipients.push(normalized);
-    saveStoredRecipients(recipients);
-  }
+function attachRecipientForm() {
+  const modal = document.getElementById('recipientModal');
+  const form = document.getElementById('recipientForm');
+  document.querySelector('[data-action="recipient"]')?.addEventListener('click', () => openWorkspaceModal(modal));
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const fields = [
+      { input: document.getElementById('recipientName'), message: document.getElementById('recipientNameError') },
+      { input: document.getElementById('recipientEmail'), message: document.getElementById('recipientEmailError'), type: 'email' }
+    ];
+    if (!validateModalForm(fields, document.getElementById('recipientFormError'))) {
+      fields.find(({ input }) => input.getAttribute('aria-invalid') === 'true')?.input.focus();
+      return;
+    }
+    const name = fields[0].input.value.trim();
+    const email = fields[1].input.value.trim();
+    const recipients = getStoredRecipients();
+    if (recipients.some((entry) => entry.email.toLowerCase() === email.toLowerCase())) {
+      fields[1].message.textContent = 'This email is already in your recipient list.';
+      fields[1].input.setAttribute('aria-invalid', 'true');
+      fields[1].input.closest('.form-group')?.classList.add('has-error');
+      document.getElementById('recipientFormError').hidden = false;
+      fields[1].input.focus();
+      return;
+    }
+    try {
+      recipients.push({ name, email });
+      saveStoredRecipients(recipients);
+      form.reset();
+      fields.forEach(({ input, message }) => {
+        input.removeAttribute('aria-invalid');
+        input.closest('.form-group')?.classList.remove('has-error');
+        message.textContent = '';
+      });
+      document.getElementById('recipientFormError').hidden = true;
+      closeWorkspaceModal(modal);
+      showToast(`Saved ${name} to the local recipient list.`, 'success');
+    } catch (error) {
+      showToast('Unable to save this recipient in your browser.', 'error');
+    }
+  });
+}
 
-  setStatusMessage(`Saved ${normalized.name} to the local recipient list.`, 'success');
+function finishCampaignConfirmation(confirmed) {
+  const modal = document.getElementById('campaignConfirmModal');
+  closeWorkspaceModal(modal);
+  const resolve = campaignConfirmationResolver;
+  campaignConfirmationResolver = null;
+  resolve?.(confirmed);
+}
+
+function requestCampaignConfirmation(message) {
+  const modal = document.getElementById('campaignConfirmModal');
+  const messageElement = document.getElementById('campaignConfirmMessage');
+  if (messageElement) messageElement.textContent = message;
+  openWorkspaceModal(modal);
+  return new Promise((resolve) => {
+    campaignConfirmationResolver = resolve;
+  });
+}
+
+function attachCampaignConfirmation() {
+  document.getElementById('cancelCampaignConfirm')?.addEventListener('click', () => finishCampaignConfirmation(false));
+  document.getElementById('approveCampaignConfirm')?.addEventListener('click', () => finishCampaignConfirmation(true));
 }
 
 function exportHistoryCsv() {
@@ -310,7 +543,8 @@ async function sendCampaign() {
 
   const campaignName = typeSelect.options[typeSelect.selectedIndex]?.textContent || typeSelect.value;
   const templateName = templateSelect.options[templateSelect.selectedIndex]?.textContent || 'selected template';
-  if (!window.confirm(`Submit "${subjectInput.value.trim()}" using ${templateName} for ${campaignName}?`)) {
+  const confirmed = await requestCampaignConfirmation(`Submit "${subjectInput.value.trim()}" using ${templateName} for ${campaignName}?`);
+  if (!confirmed) {
     return;
   }
 
@@ -373,10 +607,6 @@ function attachQuickActions() {
     button.addEventListener('click', () => {
       const action = button.dataset.action;
 
-      if (action === 'recipient') {
-        addRecipientFromPrompt();
-      }
-
       if (action === 'export') {
         exportHistoryCsv();
       }
@@ -423,6 +653,11 @@ function focusCampaignForm() {
 
 window.addEventListener('DOMContentLoaded', async () => {
   await initPortalData();
+  initSidebar();
+  attachModalDismissal();
+  attachIntakeForm();
+  attachRecipientForm();
+  attachCampaignConfirmation();
   await loadCampaignCatalog();
   await loadCampaignHistory();
   attachHistoryFilters();
