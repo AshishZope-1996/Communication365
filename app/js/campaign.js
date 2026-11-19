@@ -67,6 +67,75 @@ function setStatusMessage(message, tone = 'info') {
   statusBox.innerHTML = `<i class="fa-solid ${tone === 'success' ? 'fa-circle-check' : tone === 'error' ? 'fa-circle-exclamation' : 'fa-circle-info'}"></i> ${safeText(message)}`;
 }
 
+function getSelectedTemplate() {
+  const templateSelect = document.getElementById('templateSelect');
+  return templateSelect?.selectedOptions?.[0];
+}
+
+async function openTemplatePreview() {
+  const selected = getSelectedTemplate();
+  const modal = document.getElementById('previewModal');
+  const frame = document.getElementById('emailPreviewFrame');
+  const subject = document.getElementById('previewSubject');
+
+  if (!selected?.value || !modal || !frame) {
+    setStatusMessage('Choose an email template before opening the preview.', 'error');
+    return;
+  }
+
+  modal.hidden = false;
+  frame.srcdoc = '<p style="font:16px sans-serif;padding:24px;color:#68738d">Generating a secure preview...</p>';
+  if (subject) subject.textContent = document.getElementById('campaignSubject')?.value || selected.dataset.subject || 'Campaign message';
+  try {
+    const data = await fetchCampaignJson(`/preview?template_id=${encodeURIComponent(selected.value)}`);
+    frame.srcdoc = data.html || '<p style="font:16px sans-serif;padding:24px">This template has no preview content.</p>';
+  } catch (error) {
+    frame.srcdoc = '<p style="font:16px sans-serif;padding:24px;color:#b42318">The template preview is unavailable.</p>';
+    setStatusMessage('Unable to load the selected email preview.', 'error');
+  }
+}
+
+function closeTemplatePreview() {
+  const modal = document.getElementById('previewModal');
+  const frame = document.getElementById('emailPreviewFrame');
+  if (modal) modal.hidden = true;
+  if (frame) frame.srcdoc = '';
+}
+
+function attachPreviewControls() {
+  const previewButton = document.getElementById('previewCampaignBtn');
+  const closeButton = document.getElementById('closePreviewBtn');
+  const modal = document.getElementById('previewModal');
+  const frame = document.getElementById('emailPreviewFrame');
+
+  previewButton?.addEventListener('click', openTemplatePreview);
+  closeButton?.addEventListener('click', closeTemplatePreview);
+  modal?.addEventListener('click', (event) => {
+    if (event.target === modal) closeTemplatePreview();
+  });
+  document.querySelectorAll('[data-preview-mode]').forEach((button) => {
+    button.addEventListener('click', () => {
+      document.querySelectorAll('[data-preview-mode]').forEach((item) => item.classList.toggle('active', item === button));
+      frame?.classList.remove('preview-tablet', 'preview-mobile');
+      if (button.dataset.previewMode !== 'desktop') frame?.classList.add(`preview-${button.dataset.previewMode}`);
+    });
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && modal && !modal.hidden) closeTemplatePreview();
+  });
+}
+
+function attachWorkspaceNavigation() {
+  document.querySelectorAll('[data-scroll-target]').forEach((button) => {
+    button.addEventListener('click', () => document.getElementById(button.dataset.scrollTarget)?.scrollIntoView({ behavior: 'smooth' }));
+  });
+  document.querySelectorAll('.page-nav .nav-link').forEach((link) => {
+    link.addEventListener('click', () => {
+      document.querySelectorAll('.page-nav .nav-link').forEach((item) => item.classList.toggle('active', item === link));
+    });
+  });
+}
+
 function populateCampaignOptions(data) {
   const typeSelect = document.getElementById('campaignTypeSelect');
   const templateSelect = document.getElementById('templateSelect');
@@ -358,6 +427,8 @@ window.addEventListener('DOMContentLoaded', async () => {
   await loadCampaignHistory();
   attachHistoryFilters();
   attachQuickActions();
+  attachPreviewControls();
+  attachWorkspaceNavigation();
 
   const sendButton = document.getElementById('sendCampaignBtn');
   const refreshButton = document.getElementById('refreshHistoryBtn');

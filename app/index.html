@@ -4,186 +4,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campaign Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Communication360 email campaign workspace">
+    <title>Communication360 | Campaign workspace</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body class="page-body">
     <div class="loader-overlay" id="globalLoader" aria-live="polite">
-        <div class="loader"></div>
-        <h3>Please wait...</h3>
-        <p>Preparing your campaign workspace</p>
+        <div class="sending-visual" aria-hidden="true"><i class="fa-solid fa-envelope"></i></div>
+        <h3>Preparing your workspace</h3>
+        <p>Loading campaign data...</p>
     </div>
 
-    <div class="container">
-        <header class="dashboard-header">
-            <div class="brand-section">
-                <div class="brand-logo"><i class="fa-solid fa-bullhorn"></i></div>
+    <div class="app-shell">
+        <aside class="app-sidebar" aria-label="Primary navigation">
+            <a class="brand-mark" href="#overview">
+                <span class="brand-logo"><i class="fa-solid fa-paper-plane"></i></span>
+                <span><strong>Communication</strong><small>360 campaign studio</small></span>
+            </a>
+            <div class="sidebar-label">Workspace</div>
+            <nav class="page-nav">
+                <a class="nav-link active" href="#overview"><i class="fa-solid fa-grid-2"></i> Overview</a>
+                <a class="nav-link" href="#create-campaign"><i class="fa-solid fa-pen-to-square"></i> Create campaign</a>
+                <a class="nav-link" href="#history"><i class="fa-solid fa-clock-rotate-left"></i> Campaign history</a>
+                <a class="nav-link" href="#quick-actions"><i class="fa-solid fa-address-book"></i> Contacts & tools</a>
+            </nav>
+            <div class="sidebar-footer">
+                <span class="status-dot"></span>
+                <span><strong>Services online</strong><small>Connected to campaign API</small></span>
+            </div>
+        </aside>
+
+        <main class="app-main">
+            <header class="topbar">
                 <div>
-                    <span class="eyebrow">EMAIL CAMPAIGN PORTAL</span>
-                    <h1>Launch & Manage Campaigns</h1>
-                    <p class="subtitle">Create, schedule and monitor email campaigns from a single dashboard.</p>
+                    <span class="eyebrow">CAMPAIGN WORKSPACE</span>
+                    <h1>Good to see you, <span class="headline-accent">campaign team</span>.</h1>
+                    <p class="subtitle">Create thoughtful communication and monitor every submission in one place.</p>
                 </div>
-            </div>
-            <div class="dashboard-actions">
-                <span class="version-pill">v2.1.0</span>
-                <button class="primary-action" id="addCampaignBtn" type="button">
-                    <i class="fa-solid fa-plus"></i> Add Campaign
-                </button>
-                <button class="secondary-button" id="newCampaignPresetBtn" type="button">
-                    <i class="fa-solid fa-rotate-left"></i> Reset
-                </button>
-            </div>
-        </header>
+                <div class="dashboard-actions">
+                    <span class="version-pill">v2.1.0</span>
+                    <button class="primary-action" id="addCampaignBtn" type="button"><i class="fa-solid fa-plus"></i> New campaign</button>
+                    <button class="icon-button" id="newCampaignPresetBtn" type="button" aria-label="Reset campaign form" title="Reset form"><i class="fa-solid fa-arrow-rotate-left"></i></button>
+                </div>
+            </header>
 
-        <section class="stats-grid" aria-label="Campaign Statistics">
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fa-solid fa-paper-plane"></i></div>
-                <div>
-                    <h2 id="campaignCount">0</h2>
-                    <span>Total Campaigns</span>
+            <section id="overview" class="overview-grid" aria-label="Campaign overview">
+                <div class="hero-card">
+                    <div class="hero-content">
+                        <span class="hero-kicker"><i class="fa-solid fa-sparkles"></i> Your communication command center</span>
+                        <h2>Make every send<br><span>count.</span></h2>
+                        <p>Choose a trusted template, preview the experience, and send with confidence.</p>
+                        <button class="hero-action" type="button" data-scroll-target="create-campaign">Start a campaign <i class="fa-solid fa-arrow-right"></i></button>
+                    </div>
+                    <div class="hero-orbit" aria-hidden="true"><i class="fa-solid fa-envelope"></i><span></span><b></b></div>
                 </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fa-solid fa-envelope-circle-check"></i></div>
-                <div>
-                    <h2 id="sentCount">0</h2>
-                    <span>Emails Sent</span>
+                <div class="activity-card">
+                    <div class="card-heading"><div><span class="eyebrow">LIVE PULSE</span><h2>Workspace health</h2></div><i class="fa-solid fa-chart-line"></i></div>
+                    <div class="health-row"><span class="health-icon"><i class="fa-solid fa-server"></i></span><span><strong>Campaign services</strong><small>Ready for your next send</small></span><em>Online</em></div>
+                    <div class="health-row"><span class="health-icon"><i class="fa-solid fa-shield-heart"></i></span><span><strong>Delivery integrity</strong><small>Provider response is verified</small></span><em>Protected</em></div>
                 </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
-                <div>
-                    <h2 id="recipientCount">0</h2>
-                    <span>Recipients</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
-                <div>
-                    <h2 id="historyCount">0</h2>
-                    <span>History</span>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="card" aria-labelledby="createCampaignTitle">
-            <div class="section-title-row">
-                <div>
-                    <h2 id="createCampaignTitle"><i class="fa-solid fa-bullhorn"></i> Create Campaign</h2>
-                    <p>Choose a campaign type, template and send emails to all saved recipients.</p>
-                </div>
-            </div>
+            <section class="stats-grid" aria-label="Campaign statistics">
+                <div class="stat-card"><div class="stat-icon"><i class="fa-solid fa-layer-group"></i></div><div><h2 id="campaignCount">0</h2><span>Total campaigns</span><small>Across your workspace</small></div></div>
+                <div class="stat-card"><div class="stat-icon blue"><i class="fa-solid fa-paper-plane"></i></div><div><h2 id="sentCount">0</h2><span>Emails submitted</span><small>Accepted by provider</small></div></div>
+                <div class="stat-card"><div class="stat-icon green"><i class="fa-solid fa-users"></i></div><div><h2 id="recipientCount">0</h2><span>Recipients</span><small>Active audience</small></div></div>
+                <div class="stat-card"><div class="stat-icon amber"><i class="fa-solid fa-chart-simple"></i></div><div><h2 id="historyCount">0</h2><span>History records</span><small>Recent activity</small></div></div>
+            </section>
 
-            <div class="toolbar-row">
-                <div class="search-box">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input id="campaignSearchInput" type="search" placeholder="Search campaign or recipient...">
-                </div>
-                <div class="status-filter-group" aria-label="Campaign status filter">
-                    <button type="button" class="chip active" data-status-filter="all">All</button>
-                    <button type="button" class="chip" data-status-filter="accepted">Accepted</button>
-                    <button type="button" class="chip" data-status-filter="failed">Failed</button>
-                </div>
-            </div>
+            <section id="create-campaign" class="card campaign-card" aria-labelledby="createCampaignTitle">
+                <div class="section-title-row"><div><span class="eyebrow">BUILD & SEND</span><h2 id="createCampaignTitle">Create a campaign</h2><p>Set up your message in a few focused steps. Nothing is sent until you confirm.</p></div><span class="step-pill">01 <span>Setup</span></span></div>
+                <div class="stepper" aria-label="Campaign steps"><span class="active"><b>1</b> Setup</span><i></i><span><b>2</b> Preview</span><i></i><span><b>3</b> Confirm</span></div>
+                <form class="form-grid campaign-grid" id="campaignForm">
+                    <div class="form-group"><label class="form-label" for="campaignTypeSelect">Campaign type</label><select id="campaignTypeSelect" required><option value="">Select campaign</option></select></div>
+                    <div class="form-group"><label class="form-label" for="templateSelect">Email template</label><select id="templateSelect" required disabled><option value="">Select template</option></select></div>
+                    <div class="form-group full-width"><label class="form-label" for="campaignSubject">Subject line</label><input type="text" id="campaignSubject" placeholder="Give your message a clear subject" required></div>
+                    <div class="form-group full-width" id="templateDetails" aria-live="polite" hidden><div class="status-box status-info" id="templateDetailsText"></div></div>
+                </form>
+                <div class="button-row"><button class="secondary-button" id="previewCampaignBtn" type="button"><i class="fa-solid fa-eye"></i> Preview email</button><button class="save-button" id="sendCampaignBtn" type="button"><i class="fa-solid fa-paper-plane"></i> Send campaign</button></div>
+                <div class="status-box status-info" id="campaignStatus"><i class="fa-solid fa-circle-info"></i> Ready to launch your campaign.</div>
+            </section>
 
-            <form class="form-grid campaign-grid" id="campaignForm">
-                <div class="form-group">
-                    <label class="form-label" for="campaignTypeSelect">Campaign Type</label>
-                    <select id="campaignTypeSelect" required>
-                        <option value="">Select Campaign</option>
-                    </select>
-                </div>
+            <section id="history" class="card" aria-labelledby="campaignHistoryTitle">
+                <div class="section-title-row"><div><span class="eyebrow">ACTIVITY</span><h2 id="campaignHistoryTitle">Campaign history</h2><p>Review provider responses and delivery records from recent sends.</p></div><button class="secondary-button" id="refreshHistoryBtn" type="button"><i class="fa-solid fa-rotate"></i> Refresh</button></div>
+                <div class="toolbar-row"><div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input id="campaignSearchInput" type="search" placeholder="Search recipient, campaign or status..." aria-label="Search campaign history"></div><div class="status-filter-group" aria-label="Campaign status filter"><button type="button" class="chip active" data-status-filter="all">All</button><button type="button" class="chip" data-status-filter="accepted">Accepted</button><button type="button" class="chip" data-status-filter="failed">Failed</button></div></div>
+                <div class="table-wrap"><table><thead><tr><th scope="col">Time</th><th scope="col">Recipient</th><th scope="col">Campaign</th><th scope="col">Status</th><th scope="col">Message</th></tr></thead><tbody id="historyTableBody"><tr><td colspan="5">Loading campaign history...</td></tr></tbody></table></div>
+            </section>
 
-                <div class="form-group">
-                    <label class="form-label" for="templateSelect">Email Template</label>
-                    <select id="templateSelect" required disabled>
-                        <option value="">Select Template</option>
-                    </select>
-                </div>
-
-                <div class="form-group full-width">
-                    <label class="form-label" for="campaignSubject">Subject</label>
-                    <input type="text" id="campaignSubject" placeholder="Enter campaign email subject" required>
-                </div>
-                <div class="form-group full-width" id="templateDetails" aria-live="polite" hidden>
-                    <div class="status-box status-info" id="templateDetailsText"></div>
-                </div>
-            </form>
-
-            <div class="button-row">
-                <button class="save-button" id="sendCampaignBtn" type="button">
-                    <i class="fa-solid fa-paper-plane"></i> Send Campaign
-                </button>
-                <button class="secondary-button" id="refreshHistoryBtn" type="button">
-                    <i class="fa-solid fa-rotate"></i> Refresh History
-                </button>
-            </div>
-
-            <div class="status-box status-info" id="campaignStatus">
-                <i class="fa-solid fa-circle-info"></i> Ready to launch your campaign.
-            </div>
-        </section>
-
-        <section class="card" aria-labelledby="campaignHistoryTitle">
-            <div class="section-title-row">
-                <div>
-                    <h2 id="campaignHistoryTitle"><i class="fa-solid fa-clock-rotate-left"></i> Campaign History</h2>
-                    <p>View all sent campaign records and delivery status.</p>
-                </div>
-            </div>
-
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th scope="col">Time</th>
-                            <th scope="col">Recipient</th>
-                            <th scope="col">Campaign</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Message</th>
-                        </tr>
-                    </thead>
-                    <tbody id="historyTableBody">
-                        <tr>
-                            <td colspan="5">Loading campaign history...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <section class="card" aria-labelledby="quickActionsTitle">
-            <div class="section-title-row">
-                <h2 id="quickActionsTitle"><i class="fa-solid fa-bolt"></i> Quick Actions</h2>
-            </div>
-            <div class="quick-actions">
-                <button class="secondary-button" type="button" data-action="recipient">
-                    <i class="fa-solid fa-user-plus"></i> Add Recipient
-                </button>
-                <button class="secondary-button" type="button" data-action="import">
-                    <i class="fa-solid fa-file-import"></i> Import Contacts
-                </button>
-                <button class="secondary-button" type="button" data-action="export">
-                    <i class="fa-solid fa-file-export"></i> Export History
-                </button>
-                <button class="secondary-button" type="button" data-action="reports">
-                    <i class="fa-solid fa-chart-pie"></i> Reports
-                </button>
-            </div>
-        </section>
-
-        <footer class="footer">
-            <p>© 2026 Campaign Portal • Designed for Modern Email Campaign Management</p>
-        </footer>
+            <section id="quick-actions" class="card quick-card" aria-labelledby="quickActionsTitle"><div class="section-title-row"><div><span class="eyebrow">TOOLS</span><h2 id="quickActionsTitle">Quick actions</h2></div></div><div class="quick-actions"><button class="tool-button" type="button" data-action="recipient"><i class="fa-solid fa-user-plus"></i><span><strong>Add recipient</strong><small>Save a local contact</small></span></button><button class="tool-button" type="button" data-action="import"><i class="fa-solid fa-file-import"></i><span><strong>Import contacts</strong><small>Prepare your audience</small></span></button><button class="tool-button" type="button" data-action="export"><i class="fa-solid fa-file-export"></i><span><strong>Export history</strong><small>Download a CSV report</small></span></button><button class="tool-button" type="button" data-action="reports"><i class="fa-solid fa-chart-pie"></i><span><strong>View insights</strong><small>Filter successful sends</small></span></button></div></section>
+            <footer class="footer"><p>© 2026 Communication360 <span>•</span> Built for reliable email communication</p></footer>
+        </main>
     </div>
 
-    <script src="js/data-store.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/dashboard-stats.js?v=2"></script>
-    <script src="js/campaign.js?v=3"></script>
+    <div class="preview-modal" id="previewModal" hidden role="dialog" aria-modal="true" aria-labelledby="previewTitle">
+        <div class="preview-dialog"><div class="preview-header"><div><span class="eyebrow">LIVE RENDER</span><h2 id="previewTitle">Email preview</h2></div><div class="preview-controls"><button class="preview-mode active" data-preview-mode="desktop" type="button">Desktop</button><button class="preview-mode" data-preview-mode="tablet" type="button">Tablet</button><button class="preview-mode" data-preview-mode="mobile" type="button">Mobile</button><button class="icon-button" id="closePreviewBtn" type="button" aria-label="Close preview"><i class="fa-solid fa-xmark"></i></button></div></div><div class="email-client"><div class="email-meta"><span class="avatar"><i class="fa-solid fa-paper-plane"></i></span><div><strong>Communication360</strong><small id="previewSubject">Select a template to preview</small></div><time>Now</time></div><div class="preview-stage"><iframe id="emailPreviewFrame" title="Rendered email preview" sandbox=""></iframe></div></div></div>
+    </div>
+
+    <script src="js/data-store.js"></script><script src="js/ui.js"></script><script src="js/dashboard-stats.js?v=2"></script><script src="js/campaign.js?v=4"></script>
 </body>
-
 </html>

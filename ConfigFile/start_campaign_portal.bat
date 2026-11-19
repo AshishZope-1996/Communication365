@@ -40,7 +40,7 @@ timeout /t 5 >nul
 
 echo.
 echo Opening Portal...
-start http://127.0.0.1:8000/index.html
+start http://127.0.0.1:3000/app/index.html
 
 echo.
 echo ============================================

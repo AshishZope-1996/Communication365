@@ -53,8 +53,12 @@ the portal with the environment variables configured in `.env`:
 2. The campaign API in `Wrapper` (`python campaign_api.py`).
 3. The dashboard stats API in `Wrapper` (`python dashboard_stats_api.py`).
 
-Open `http://127.0.0.1:8000/index.html`. The campaign API listens on port 8001;
+Open `http://127.0.0.1:3000/app/index.html`. The campaign API listens on port 8001;
 the catalog is unavailable until it can connect to PostgreSQL.
+
+The workspace includes a read-only template preview at
+`GET /preview?template_id=<id>`. It reads the active template selected from the
+catalog and returns its subject and HTML without changing sending behavior.
 
 ## Tests
 

@@ -11,7 +11,7 @@ python -m http.server 8000
 ```
 - Open in browser:
 ```text
-http://127.0.0.1:8000/index.html
+http://127.0.0.1:3000/app/index.html
 ```
 
 2. Start the campaign API backend
@@ -61,5 +61,5 @@ py dashboard_stats_api.py
 6. Open the portal UI in your browser using the following URL:
 
 ```
-http://127.0.0.1:8000/index.html
+http://127.0.0.1:3000/app/index.html
 ```

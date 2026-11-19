@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import sys
+from urllib.parse import parse_qs, urlparse
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'ConfigFile'))
@@ -36,6 +37,35 @@ class CampaignHandler(BaseHTTPRequestHandler):
             except Exception:
                 logger.exception("Campaign catalog request failed.")
                 self._send_json({"error": "Unable to load the campaign catalog from the database."}, 500)
+        elif self.path.startswith("/preview"):
+            try:
+                template_id = parse_qs(urlparse(self.path).query).get("template_id", [None])[0]
+                if template_id is None:
+                    self._send_json({"error": "template_id is required"}, 400)
+                    return
+                template = get_campaign_template(int(template_id))
+                if not template:
+                    self._send_json({"error": "The selected template is unavailable or inactive."}, 404)
+                    return
+                template_path = os.path.realpath(os.path.join(
+                    os.path.dirname(__file__), "..", "Templates", template["template"]
+                ))
+                templates_root = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "Templates"))
+                if os.path.commonpath([templates_root, template_path]) != templates_root:
+                    self._send_json({"error": "The selected template file is invalid."}, 400)
+                    return
+                with open(template_path, "r", encoding="utf-8") as template_file:
+                    self._send_json({
+                        "subject": template["subject"],
+                        "html": template_file.read()
+                    })
+            except (TypeError, ValueError):
+                self._send_json({"error": "template_id must be an integer"}, 400)
+            except FileNotFoundError:
+                self._send_json({"error": "The selected template file was not found."}, 404)
+            except Exception:
+                logger.exception("Campaign preview request failed.")
+                self._send_json({"error": "Unable to load the campaign preview."}, 500)
         elif self.path.startswith("/history"):
             try:
                 self._send_json({"history": load_campaign_history(limit=25)})
