@@ -1,577 +1,91 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="x-apple-disable-message-reformatting">
   <title>Sharing My Notes With You</title>
-
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: #f4f7fb;
-      font-family: Arial, Helvetica, sans-serif;
-      color: #172b4d;
-      -webkit-text-size-adjust: 100%;
-      -ms-text-size-adjust: 100%;
-    }
-
-    table {
-      border-collapse: collapse;
-    }
-
-    img {
-      border: 0;
-      outline: none;
-      text-decoration: none;
-      display: block;
-    }
-
-    a {
-      text-decoration: none;
-    }
-
-    .container {
-      width: 720px;
-      max-width: 720px;
-    }
-
-    @media only screen and (max-width: 600px) {
-      .container {
-        width: 100% !important;
-      }
-
-      .mobile-padding {
-        padding-left: 20px !important;
-        padding-right: 20px !important;
-      }
-
-      .hero-title {
-        font-size: 25px !important;
-      }
-
-      .content-title {
-        font-size: 21px !important;
-      }
+    body { margin:0; padding:0; background:#f2f5f9; -webkit-text-size-adjust:100%; }
+    table { border-collapse:collapse; }
+    @media only screen and (max-width:600px) {
+      .container { width:100% !important; }
+      .mobile-padding { padding-left:20px !important; padding-right:20px !important; }
     }
   </style>
 </head>
-
-<body>
-
-  <!-- OUTER BACKGROUND -->
-  <table width="100%" cellpadding="0" cellspacing="0" border="0"
-         style="background:#f4f7fb;">
-
+<body style="margin:0;padding:0;background:#f2f5f9;font-family:Arial,Helvetica,sans-serif;color:#27364a;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f2f5f9;">
     <tr>
-      <td align="center" style="padding:35px 12px;">
-
-        <!-- MAIN CARD -->
-        <table class="container"
-               width="720"
-               cellpadding="0"
-               cellspacing="0"
-               border="0"
-               style="
-                 width:720px;
-                 max-width:720px;
-                 background:#ffffff;
-                 border-radius:14px;
-                 overflow:hidden;
-                 border:1px solid #e5eaf0;
-                 box-shadow:0 8px 30px rgba(15,23,42,0.07);
-               ">
-
-          <!-- =====================================================
-               HEADER
-          ====================================================== -->
+      <td align="center" style="padding:28px 12px;">
+        <table class="container" role="presentation" width="640" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:640px;background:#ffffff;border:1px solid #e1e7ef;">
           <tr>
-            <td align="center"
-                style="
-                  background:#0A66C2;
-                  padding:38px 30px 36px;
-                  color:#ffffff;
-                ">
-
-              <div style="
-                font-size:38px;
-                line-height:1;
-                margin-bottom:14px;
-              ">
-                📚
-              </div>
-
-              <div class="hero-title"
-                   style="
-                     font-size:30px;
-                     line-height:1.25;
-                     font-weight:700;
-                     letter-spacing:-0.3px;
-                   ">
-                Sharing My Notes With You
-              </div>
-
-              <div style="
-                margin-top:10px;
-                font-size:15px;
-                line-height:1.6;
-                color:#eaf4ff;
-              ">
-                Practical knowledge • Continuous learning • Career growth
-              </div>
-
+            <td align="center" style="padding:30px 24px;background:#243b63;color:#ffffff;">
+              <p style="margin:0 0 10px;font-size:34px;line-height:1;">&#128218;</p>
+              <h1 style="margin:0;font-size:28px;line-height:1.25;font-weight:700;">Sharing My Notes With You</h1>
+              <p style="margin:9px 0 0;color:#e0e9f7;font-size:14px;line-height:1.6;">Practical knowledge · Continuous learning · Career growth</p>
             </td>
           </tr>
-
-
-          <!-- =====================================================
-               GREETING
-          ====================================================== -->
           <tr>
-            <td class="mobile-padding"
-                style="
-                  padding:34px 42px 8px;
-                  font-size:15px;
-                  line-height:1.75;
-                  color:#334155;
-                ">
-
-              <p style="
-                margin:0 0 18px;
-                font-size:16px;
-                color:#0f172a;
-              ">
-                Hi <strong>{{NAME}}</strong>,
-              </p>
-
-              <p style="margin:0 0 16px;">
-                I’m happy to share my notes with you. I’ve put these
-                resources together to make learning, revision, and
-                interview preparation more structured and practical.
-              </p>
-
-              <p style="margin:0;">
-                I hope these notes help you strengthen your concepts,
-                revise important topics quickly, and apply the knowledge
-                in real-world projects.
-              </p>
-
+            <td class="mobile-padding" style="padding:28px 42px 12px;color:#4b596c;font-size:14px;line-height:1.75;">
+              <p style="margin:0 0 14px;color:#27364a;font-size:15px;">Hi <strong>{{NAME}}</strong>,</p>
+              <p style="margin:0 0 14px;">I’m happy to share my notes with you. I’ve put these resources together to make learning, revision, and interview preparation more structured and practical.</p>
+              <p style="margin:0;">I hope these notes help you strengthen your concepts, revise important topics quickly, and apply the knowledge in real-world projects.</p>
             </td>
           </tr>
-
-
-          <!-- =====================================================
-               FEATURED RESOURCE
-          ====================================================== -->
           <tr>
-            <td class="mobile-padding"
-                style="padding:26px 42px 10px;">
-
-              <table width="100%"
-                     cellpadding="0"
-                     cellspacing="0"
-                     border="0"
-                     style="
-                       background:#f7fbff;
-                       border:1px solid #dbeafe;
-                       border-radius:12px;
-                     ">
-
+            <td class="mobile-padding" style="padding:18px 42px 8px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f5f8fd;border:1px solid #e2eaf5;">
                 <tr>
-
-                  <!-- PDF ICON -->
-                  <td width="85"
-                      valign="middle"
-                      align="center"
-                      style="padding:25px 10px 25px 20px;">
-
-                    <div style="
-                      width:58px;
-                      height:58px;
-                      line-height:58px;
-                      background:#0A66C2;
-                      color:#ffffff;
-                      border-radius:10px;
-                      font-size:16px;
-                      font-weight:700;
-                      text-align:center;
-                    ">
-                      PDF
-                    </div>
-
+                  <td width="82" align="center" valign="middle" style="padding:20px 8px 20px 16px;">
+                    <table role="presentation" width="56" height="56" cellpadding="0" cellspacing="0" border="0" style="background:#315f9e;"><tr><td align="center" valign="middle" style="color:#ffffff;font-size:14px;font-weight:700;">PDF</td></tr></table>
                   </td>
-
-
-                  <!-- RESOURCE CONTENT -->
-                  <td valign="middle"
-                      style="padding:25px 22px 25px 10px;">
-
-                    <div style="
-                      font-size:17px;
-                      font-weight:700;
-                      color:#0f172a;
-                      margin-bottom:7px;
-                    ">
-                      Technical Notes & Learning Material
-                    </div>
-
-                    <div style="
-                      font-size:13.5px;
-                      line-height:1.6;
-                      color:#64748b;
-                    ">
-                      The notes are attached to this email as a PDF
-                      for easy reading, downloading, and future reference.
-                    </div>
-
+                  <td valign="middle" style="padding:20px 18px 20px 8px;">
+                    <p style="margin:0 0 6px;color:#27364a;font-size:16px;line-height:1.4;font-weight:700;">Technical Notes &amp; Learning Material</p>
+                    <p style="margin:0;color:#68778b;font-size:13px;line-height:1.6;">The notes are attached to this email as a PDF for easy reading, downloading, and future reference.</p>
                   </td>
-
                 </tr>
-
               </table>
-
             </td>
           </tr>
-
-
-          <!-- =====================================================
-               WHY THESE NOTES
-          ====================================================== -->
           <tr>
-            <td class="mobile-padding"
-                style="
-                  padding:30px 42px 8px;
-                ">
-
-              <div class="content-title"
-                   style="
-                     font-size:21px;
-                     font-weight:700;
-                     color:#0f172a;
-                     margin-bottom:18px;
-                   ">
-                What you’ll find inside
-              </div>
-
-
-              <!-- POINT 1 -->
-              <table width="100%"
-                     cellpadding="0"
-                     cellspacing="0"
-                     border="0"
-                     style="margin-bottom:13px;">
-
-                <tr>
-
-                  <td width="34"
-                      valign="top">
-
-                    <div style="
-                      width:25px;
-                      height:25px;
-                      line-height:25px;
-                      background:#e8f3ff;
-                      color:#0A66C2;
-                      border-radius:50%;
-                      text-align:center;
-                      font-size:13px;
-                      font-weight:700;
-                    ">
-                      ✓
-                    </div>
-
-                  </td>
-
-                  <td valign="top"
-                      style="
-                        font-size:14px;
-                        line-height:1.6;
-                        color:#475569;
-                      ">
-
-                    Clear and structured explanations of important concepts.
-
-                  </td>
-
-                </tr>
-
+            <td class="mobile-padding" style="padding:24px 42px 8px;">
+              <p style="margin:0 0 12px;color:#27364a;font-size:18px;line-height:1.4;font-weight:700;">What you’ll find inside</p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr><td width="28" valign="top" style="padding:5px 0;color:#315f9e;font-size:15px;font-weight:700;">&#10003;</td><td style="padding:5px 0;color:#526074;font-size:14px;line-height:1.6;">Clear and structured explanations of important concepts.</td></tr>
+                <tr><td width="28" valign="top" style="padding:5px 0;color:#315f9e;font-size:15px;font-weight:700;">&#10003;</td><td style="padding:5px 0;color:#526074;font-size:14px;line-height:1.6;">Practical examples to help connect theory with real-world scenarios.</td></tr>
+                <tr><td width="28" valign="top" style="padding:5px 0;color:#315f9e;font-size:15px;font-weight:700;">&#10003;</td><td style="padding:5px 0;color:#526074;font-size:14px;line-height:1.6;">Useful reference material for interviews, revision, and professional growth.</td></tr>
               </table>
-
-
-              <!-- POINT 2 -->
-              <table width="100%"
-                     cellpadding="0"
-                     cellspacing="0"
-                     border="0"
-                     style="margin-bottom:13px;">
-
-                <tr>
-
-                  <td width="34"
-                      valign="top">
-
-                    <div style="
-                      width:25px;
-                      height:25px;
-                      line-height:25px;
-                      background:#e8f3ff;
-                      color:#0A66C2;
-                      border-radius:50%;
-                      text-align:center;
-                      font-size:13px;
-                      font-weight:700;
-                    ">
-                      ✓
-                    </div>
-
-                  </td>
-
-                  <td valign="top"
-                      style="
-                        font-size:14px;
-                        line-height:1.6;
-                        color:#475569;
-                      ">
-
-                    Practical examples to help connect theory with real-world scenarios.
-
-                  </td>
-
-                </tr>
-
+            </td>
+          </tr>
+          <tr>
+            <td class="mobile-padding" style="padding:20px 42px 8px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fff8e9;border-left:4px solid #d6a64c;">
+                <tr><td style="padding:14px 16px;color:#665435;font-size:13px;line-height:1.65;"><strong style="color:#51401f;">A small note from me:</strong> Learning becomes more valuable when knowledge is shared. I hope these notes save you time and help you learn something useful.</td></tr>
               </table>
-
-
-              <!-- POINT 3 -->
-              <table width="100%"
-                     cellpadding="0"
-                     cellspacing="0"
-                     border="0">
-
-                <tr>
-
-                  <td width="34"
-                      valign="top">
-
-                    <div style="
-                      width:25px;
-                      height:25px;
-                      line-height:25px;
-                      background:#e8f3ff;
-                      color:#0A66C2;
-                      border-radius:50%;
-                      text-align:center;
-                      font-size:13px;
-                      font-weight:700;
-                    ">
-                      ✓
-                    </div>
-
-                  </td>
-
-                  <td valign="top"
-                      style="
-                        font-size:14px;
-                        line-height:1.6;
-                        color:#475569;
-                      ">
-
-                    Useful reference material for interviews, revision, and professional growth.
-
-                  </td>
-
-                </tr>
-
-              </table>
-
             </td>
           </tr>
-
-
-          <!-- =====================================================
-               HIGHLIGHT
-          ====================================================== -->
           <tr>
-            <td class="mobile-padding"
-                style="padding:30px 42px 10px;">
-
-              <table width="100%"
-                     cellpadding="0"
-                     cellspacing="0"
-                     border="0"
-                     style="
-                       background:#fffaf0;
-                       border-left:4px solid #f59e0b;
-                       border-radius:7px;
-                     ">
-
-                <tr>
-
-                  <td style="
-                    padding:16px 18px;
-                    font-size:13.5px;
-                    line-height:1.65;
-                    color:#6b4f1d;
-                  ">
-
-                    <strong style="color:#92400e;">
-                      A small note from me:
-                    </strong>
-                    Learning becomes more valuable when knowledge is
-                    shared. I hope these notes save you time and help
-                    you learn something useful.
-
-                  </td>
-
-                </tr>
-
-              </table>
-
+            <td align="center" style="padding:24px 28px 18px;color:#526074;font-size:14px;line-height:1.6;">
+              Have a look at the attached notes and let me know what you think.<br>
+              <span style="display:inline-block;margin-top:14px;padding:11px 20px;background:#eaf1fa;color:#315f9e;font-size:13px;font-weight:700;">PDF attached</span>
             </td>
           </tr>
-
-
-          <!-- =====================================================
-               CTA
-          ====================================================== -->
           <tr>
-            <td align="center"
-                style="padding:30px 30px 20px;">
-
-              <div style="
-                font-size:15px;
-                line-height:1.6;
-                color:#475569;
-                margin-bottom:17px;
-              ">
-                Have a look at the attached notes and let me know
-                what you think.
-              </div>
-
-              <div style="
-                display:inline-block;
-                background:#0A66C2;
-                color:#ffffff;
-                padding:13px 28px;
-                border-radius:7px;
-                font-size:14px;
-                font-weight:700;
-              ">
-                📎 PDF Attached
-              </div>
-
+            <td class="mobile-padding" style="padding:16px 42px 24px;color:#526074;font-size:14px;line-height:1.6;">
+              Happy Learning!<br><strong style="color:#27364a;">Ashish Zope</strong><br><span style="font-size:12px;">Senior Data Engineer · SQL · Python · Databricks · Cloud · Big Data</span>
             </td>
           </tr>
-
-
-          <!-- =====================================================
-               SIGNATURE
-          ====================================================== -->
           <tr>
-            <td class="mobile-padding"
-                style="
-                  padding:20px 42px 32px;
-                ">
-
-              <div style="
-                height:1px;
-                background:#e5e7eb;
-                margin-bottom:22px;
-              "></div>
-
-              <div style="
-                font-size:15px;
-                line-height:1.6;
-                color:#0f172a;
-              ">
-
-                Happy Learning! 🚀
-
-              </div>
-
-              <div style="
-                margin-top:10px;
-                font-size:16px;
-                font-weight:700;
-                color:#0f172a;
-              ">
-                Ashish Zope
-              </div>
-
-              <div style="
-                margin-top:4px;
-                font-size:13px;
-                color:#64748b;
-                line-height:1.5;
-              ">
-                Senior Data Engineer<br>
-                SQL • Python • Databricks • Cloud • Big Data
-              </div>
-
+            <td align="center" style="padding:17px 20px;background:#f7f8fa;border-top:1px solid #e8ebf0;color:#6b7482;font-size:12px;line-height:1.6;">
+              Let’s connect and keep learning together.<br>
+              <a href="https://www.linkedin.com/in/ashish-zope-627628169" target="_blank" style="display:inline-block;margin-top:6px;color:#315f9e;font-weight:700;text-decoration:none;">LinkedIn Profile</a><br>
+              Sharing knowledge. Building careers. Growing together.<br>© Ashish Zope
             </td>
           </tr>
-
-
-          <!-- =====================================================
-               CONNECT
-          ====================================================== -->
-          <tr>
-            <td align="center"
-                style="
-                  background:#f8fafc;
-                  border-top:1px solid #e5e7eb;
-                  padding:22px 20px;
-                ">
-
-              <div style="
-                font-size:13px;
-                color:#64748b;
-                margin-bottom:10px;
-              ">
-                Let’s connect and keep learning together.
-              </div>
-
-              <a href="https://www.linkedin.com/in/ashish-zope-627628169"
-                 target="_blank"
-                 style="
-                   font-size:13px;
-                   font-weight:700;
-                   color:#0A66C2;
-                 ">
-                LinkedIn Profile →
-              </a>
-
-            </td>
-          </tr>
-
-
-          <!-- =====================================================
-               FOOTER
-          ====================================================== -->
-          <tr>
-            <td align="center"
-                style="
-                  padding:14px 20px;
-                  background:#f1f5f9;
-                  color:#94a3b8;
-                  font-size:11.5px;
-                  line-height:1.5;
-                ">
-
-              Sharing knowledge. Building careers. Growing together.
-              <br>
-              © Ashish Zope
-
-            </td>
-          </tr>
-
         </table>
-
       </td>
     </tr>
-
   </table>
-
 </body>
 </html>

@@ -44,6 +44,13 @@ Never put database or SMTP credentials in source files or commit them to version
 control. For Gmail SMTP, use an application password and store it in
 `SENDER_PASSWORD`.
 
+Email templates use local assets from `assets/images/` in browser previews. For
+sent email, images are embedded as inline MIME parts by default, so recipients do
+not need access to the project or a local server. If the images are hosted
+publicly, set `EMAIL_ASSETS_BASE_URL` to the HTTPS URL of the public images
+folder (for example, `https://cdn.example.com/communication365/images`). The
+sender then uses those public URLs instead of inline attachments.
+
 ## Start the portal
 
 The startup script installs the packages listed in `requirements.txt`. Start
@@ -65,5 +72,5 @@ catalog and returns its subject and HTML without changing sending behavior.
 From the `Wrapper` directory, run:
 
 ```powershell
-python -m unittest test_portal_env.py test_campaign_catalog.py
+python -m unittest test_portal_env.py test_campaign_catalog.py test_email_assets.py
 ```

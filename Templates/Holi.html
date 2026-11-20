@@ -1,208 +1,61 @@
 <!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Happy Holi</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(180deg, #fff8fb 0%, #ffe8b6 30%, #d7f6ff 100%);
-            font-family: 'Segoe UI', Arial, sans-serif;
-            color: #3a2b2b;
-        }
-
-        .wrapper {
-            text-align: center;
-            padding: 40px 0;
-        }
-
-        .card {
-            display: inline-block;
-            max-width: 650px;
-            background: #ffffff;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, .15);
-            border: 1px solid #ffd4d4;
-            transition: .3s;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, .2);
-        }
-
-        .header {
-            background: linear-gradient(135deg, #ff4081, #ff9800, #ffeb3b, #4caf50, #2196f3, #9c27b0);
-            padding: 35px 20px;
-            color: #fff;
-            text-align: center;
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 2rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 6px;
-            color: #fff;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, .35);
-        }
-
-        .header h1 .emoji {
-            font-size: 1.5rem;
-            line-height: 1;
-        }
-
-        .header p {
-            margin-top: 12px;
-            font-size: 1rem;
-            color: #fff;
-        }
-
-        .banner img {
-            width: 100%;
-            display: block;
-            height: auto;
-        }
-
-        .content {
-            padding: 30px 28px 10px;
-            background: #fffdf9;
-            text-align: left;
-            line-height: 1.8;
-            font-size: 1rem;
-        }
-
-        .content strong {
-            color: #d81b60;
-        }
-
-        .divider {
-            height: 3px;
-            margin: 22px 0;
-            background: linear-gradient(to right, #ff4081, #ff9800, #ffeb3b, #4caf50, #2196f3, #9c27b0);
-            border-radius: 5px;
-        }
-
-        .quote {
-            background: #fff5f8;
-            border-left: 5px solid #ff4081;
-            padding: 15px;
-            border-radius: 8px;
-            font-style: italic;
-            color: #555;
-            margin: 20px 0;
-        }
-
-        .cta {
-            text-align: center;
-            font-size: 1.15rem;
-            font-weight: 600;
-            color: #d81b60;
-            margin: 25px 0;
-        }
-
-        .signature {
-            text-align: right;
-            margin-top: 25px;
-            font-weight: 500;
-        }
-
-        .footer {
-            background: linear-gradient(90deg, #ff4081, #ff9800, #4caf50, #2196f3, #9c27b0);
-            color: #fff;
-            padding: 18px;
-            text-align: center;
-            font-size: .9rem;
-        }
-
-        @media only screen and (max-width:600px) {
-            .wrapper {
-                padding: 20px 10px;
-            }
-
-            .card {
-                width: 100%;
-                border-radius: 15px;
-            }
-
-            .header {
-                padding: 28px 15px;
-            }
-
-            .header h1 {
-                font-size: 1.55rem;
-                gap: 4px;
-                text-align: center;
-            }
-
-            .header h1 .emoji {
-                font-size: 1.2rem;
-                text-align: center;
-            }
-
-            .header p {
-                font-size: .92rem;
-            }
-
-            .content {
-                padding: 20px 16px;
-                text-align: center;
-            }
-
-            .content p {
-                font-size: .95rem;
-            }
-
-            .quote {
-                text-align: left;
-            }
-
-            .signature {
-                text-align: center;
-            }
-
-            .footer {
-                font-size: .8rem;
-            }
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="x-apple-disable-message-reformatting">
+  <title>Happy Holi</title>
+  <style>
+    body { margin:0; padding:0; background:#f5f4fa; -webkit-text-size-adjust:100%; }
+    table { border-collapse:collapse; }
+    @media only screen and (max-width:600px) {
+      .container { width:100% !important; }
+      .mobile-padding { padding-left:20px !important; padding-right:20px !important; }
+    }
+  </style>
 </head>
-
-<body>
-    <div class="wrapper">
-        <div class="card">
-            <div class="header">
-                <!-- <h1> <span class="emoji">🌸</span> <span class="emoji">🎨</span> <span class="emoji">💦</span> HappyHoli
-                    <span class="emoji">💚</span> <span class="emoji">🌈</span> <span class="emoji">🎉</span> </h1> -->
-                <h1>🌸🎨💦HappyHoli💚🌈🎉</h1>
-                <h1>HappyHoloi</h1>
-            </div>
-            <div class="banner"> <img src="./images/holi.png" alt="Happy Holi Festival Banner"> </div>
-            <div class="content">
-                <p>Dear <strong>{{NAME}},</strong></p>
-                <p> May this vibrant festival of <strong>Holi</strong> fill your life with bright colors,
-                    endlesshappiness, good health, prosperity, and unforgettable moments. May every splash of color
-                    bring newhope, new beginnings, and countless reasons to smile. </p>
-                <div class="divider"></div>
-                <div class="quote"> "Let the colors of Holi spread the message of peace, friendship, happiness,
-                    andtogetherness." </div>
-                <p> Celebrate this joyous occasion with your family and friends, forget all differences, embrace
-                    newrelationships, and make every moment colorful with laughter and love. </p>
-                <p class="cta"> 🌈 Wishing You and Your Family a Safe, Colorful & Joyous Holi! 🌈 </p>
-                <p class="signature"> Warm regards,<br> <strong>Ashish Zope</strong> </p>
-            </div>
-            <div class="footer"> 🌸 May Your Life Always Be Filled With Beautiful Colors of Happiness, Success & Peace🌸
-                <br><br> © 2026 Ashish Zope
-            </div>
-        </div>
-    </div>
+<body style="margin:0;padding:0;background:#f5f4fa;font-family:Arial,Helvetica,sans-serif;color:#302b3d;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f5f4fa;">
+    <tr>
+      <td align="center" style="padding:28px 12px;">
+        <table class="container" role="presentation" width="640" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:640px;background:#ffffff;border:1px solid #e7e4ee;">
+          <tr>
+            <td align="center" style="padding:29px 22px 24px;background:#382b62;color:#ffffff;">
+              <p style="margin:0 0 8px;color:#e7c7f5;font-size:12px;line-height:1.4;font-weight:700;letter-spacing:2px;">A FESTIVAL OF COLOR</p>
+              <h1 style="margin:0;font-size:30px;line-height:1.2;font-weight:700;">Happy Holi</h1>
+              <p style="margin:9px 0 0;color:#f3ecf8;font-size:14px;line-height:1.5;">Celebrate with joy, kindness, and togetherness</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:0;">
+              <img src="../assets/images/holi-banner.jpg" alt="Friends celebrating Holi with colorful powder and festive decorations"
+                width="640" style="display:block;width:100%;max-width:640px;height:auto;border:0;">
+            </td>
+          </tr>
+          <tr>
+            <td class="mobile-padding" style="padding:28px 42px 8px;font-size:15px;line-height:1.75;color:#514b5d;">
+              <p style="margin:0 0 15px;">Dear <strong style="color:#302b3d;">{{NAME}},</strong></p>
+              <p style="margin:0 0 15px;">May this vibrant festival of <strong style="color:#9a3978;">Holi</strong> fill your life with bright colors, happiness, good health, prosperity, and unforgettable moments. May every splash of color bring new hope, new beginnings, and countless reasons to smile.</p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:20px 0;background:#faf5fc;border-left:4px solid #9a3978;">
+                <tr><td style="padding:16px 18px;color:#5d4562;font-size:14px;line-height:1.65;font-style:italic;">“Let the colors of Holi spread the message of peace, friendship, happiness, and togetherness.”</td></tr>
+              </table>
+              <p style="margin:0 0 16px;">Celebrate this joyous occasion with your family and friends, embrace new relationships, and make every moment colorful with laughter and love.</p>
+            </td>
+          </tr>
+          <tr>
+            <td class="mobile-padding" align="center" style="padding:0 42px 25px;color:#87356d;font-size:15px;line-height:1.6;font-weight:700;">Wishing you and your family a safe, colorful, and joyous Holi!</td>
+          </tr>
+          <tr>
+            <td class="mobile-padding" style="padding:0 42px 28px;text-align:right;color:#514b5d;font-size:14px;line-height:1.6;">Warm regards,<br><strong style="color:#302b3d;">Ashish Zope</strong></td>
+          </tr>
+          <tr>
+            <td align="center" style="padding:17px 20px;background:#f8f7fa;border-top:1px solid #ece9f0;color:#777181;font-size:12px;line-height:1.5;">
+              May your life be filled with color, happiness, success, and peace.<br>© Ashish Zope
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
-
 </html>

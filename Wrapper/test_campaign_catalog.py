@@ -51,7 +51,11 @@ class CampaignCatalogTests(unittest.TestCase):
 
     @patch.object(EmailWrapper.smtplib, "SMTP")
     @patch.object(EmailWrapper, "load_receivers_from_db", return_value=[{"email": "test@example.com"}])
-    @patch.object(EmailWrapper.os.path, "isfile", side_effect=lambda path: path.endswith("Holi.html"))
+    @patch.object(
+        EmailWrapper.os.path,
+        "isfile",
+        side_effect=lambda path: path.endswith("Holi.html") or path.endswith("holi-banner.jpg")
+    )
     @patch.object(EmailWrapper, "SENDER_PASSWORD", "")
     @patch.object(EmailWrapper, "SENDER_EMAIL", "")
     def test_submission_reports_missing_sender_and_attachment_without_sending(

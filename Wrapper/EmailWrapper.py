@@ -1,11 +1,15 @@
-import os
-import sys
-import smtplib
+import hashlib
 import logging
+import os
+import re
+import smtplib
+import sys
 from datetime import datetime
 from email.mime.application import MIMEApplication
+from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from urllib.parse import quote, urlsplit
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'ConfigFile'))
 
@@ -16,10 +20,96 @@ from configdb import get_db_connection # type: ignore
 SMTP_SERVER = "smtp.gmail.com"
 SMTP_PORT = 587
 logger = logging.getLogger(__name__)
+EMAIL_ASSETS_DIR = os.path.realpath(
+    os.path.join(os.path.dirname(__file__), "..", "assets", "images")
+)
+EMAIL_IMAGE_SRC_RE = re.compile(
+    r'(?P<prefix>\bsrc\s*=\s*)(?P<quote>["\'])'
+    r'(?:\.\./)?assets/images/(?P<filename>[A-Za-z0-9._-]+)(?P=quote)',
+    re.IGNORECASE
+)
 
 
 class CampaignConfigurationError(RuntimeError):
     pass
+
+
+def prepare_email_images(html_content, public_base_url=None):
+    image_matches = list(EMAIL_IMAGE_SRC_RE.finditer(html_content))
+    if not image_matches:
+        return html_content, {}
+
+    if public_base_url is None:
+        public_base_url = os.getenv("EMAIL_ASSETS_BASE_URL", "").strip()
+    else:
+        public_base_url = public_base_url.strip()
+
+    if public_base_url:
+        try:
+            parsed_url = urlsplit(public_base_url)
+        except ValueError as exc:
+            raise CampaignConfigurationError(
+                "EMAIL_ASSETS_BASE_URL must be a valid HTTPS URL."
+            ) from exc
+        if (
+            parsed_url.scheme.lower() != "https"
+            or not parsed_url.netloc
+            or parsed_url.username
+            or parsed_url.password
+            or parsed_url.query
+            or parsed_url.fragment
+        ):
+            raise CampaignConfigurationError(
+                "EMAIL_ASSETS_BASE_URL must be a public HTTPS base URL without credentials, query, or fragment."
+            )
+        public_base_url = public_base_url.rstrip("/")
+
+    inline_assets = {}
+
+    def replace_image_source(match):
+        filename = match.group("filename")
+        image_path = os.path.join(EMAIL_ASSETS_DIR, filename)
+        if not os.path.isfile(image_path):
+            raise FileNotFoundError(
+                f"Template image asset was not found: {filename}"
+            )
+
+        if public_base_url:
+            image_url = f"{public_base_url}/{quote(filename)}"
+        else:
+            content_id = "communication360-" + hashlib.sha256(
+                filename.encode("utf-8")
+            ).hexdigest()[:16]
+            inline_assets[content_id] = image_path
+            image_url = f"cid:{content_id}"
+
+        return (
+            f'{match.group("prefix")}{match.group("quote")}{image_url}'
+            f'{match.group("quote")}'
+        )
+
+    return EMAIL_IMAGE_SRC_RE.sub(replace_image_source, html_content), inline_assets
+
+
+def _make_email_body(html_content, inline_assets):
+    html_part = MIMEText(html_content, "html")
+    if not inline_assets:
+        return html_part
+
+    related_part = MIMEMultipart("related")
+    related_part.set_param("type", "text/html")
+    related_part.attach(html_part)
+    for content_id, image_path in inline_assets.items():
+        with open(image_path, "rb") as image_file:
+            image_part = MIMEImage(image_file.read())
+        image_part.add_header("Content-ID", f"<{content_id}>")
+        image_part.add_header(
+            "Content-Disposition",
+            "inline",
+            filename=os.path.basename(image_path)
+        )
+        related_part.attach(image_part)
+    return related_part
 
 
 def load_receivers_from_db():
@@ -189,6 +279,8 @@ def send_campaign_email(TEMPLATE_NAME, EMAIL_SUBJECT, CAMPAIGN_TYPE, RECIPIENTS=
     with open(HTML_PATH, "r", encoding="utf-8") as F:
         HTML_TEMPLATE = F.read()
 
+    HTML_TEMPLATE, INLINE_IMAGES = prepare_email_images(HTML_TEMPLATE)
+
     configuration_errors = []
     if not SENDER_EMAIL or not SENDER_PASSWORD:
         configuration_errors.append(
@@ -216,8 +308,7 @@ def send_campaign_email(TEMPLATE_NAME, EMAIL_SUBJECT, CAMPAIGN_TYPE, RECIPIENTS=
                 MSG["To"] = RECEIVER_EMAIL
                 MSG["Subject"] = EMAIL_SUBJECT
 
-                BODY_PART = MIMEText(HTML_CONTENT, "html")
-                MSG.attach(BODY_PART)
+                MSG.attach(_make_email_body(HTML_CONTENT, INLINE_IMAGES))
 
                 for pdf_path in PDF_FILES:
                     with open(pdf_path, "rb") as pdf_file:
