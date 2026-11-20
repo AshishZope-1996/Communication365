@@ -43,12 +43,20 @@ class EmailAssetTests(unittest.TestCase):
         rewritten, inline_assets = EmailWrapper.prepare_email_images(html, "")
         body = EmailWrapper._make_email_body(rewritten, inline_assets)
 
-        self.assertIn('src="cid:communication360-', rewritten)
         self.assertIsInstance(body, EmailWrapper.MIMEMultipart)
         self.assertEqual(len(body.get_payload()), 2)
-        self.assertEqual(body.get_payload()[1].get_content_type(), "image/jpeg")
-        self.assertTrue(
-            body.get_payload()[1]["Content-ID"].startswith("<communication360-")
+        html_part, image_part = body.get_payload()
+        html = html_part.get_payload(decode=True).decode("utf-8")
+        image_content_id = image_part["Content-ID"]
+
+        self.assertEqual(body.get_param("type"), "text/html")
+        self.assertEqual(
+            body.get_param("start"), f"<{html_part['Content-ID'].strip('<>')}>"
+        )
+        self.assertEqual(image_part.get_content_type(), "image/jpeg")
+        self.assertIn(
+            f'src="cid:{image_content_id.strip("<>")}"',
+            html
         )
 
     def test_non_https_public_asset_base_is_rejected(self):

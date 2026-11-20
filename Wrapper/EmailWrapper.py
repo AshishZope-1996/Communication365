@@ -96,8 +96,11 @@ def _make_email_body(html_content, inline_assets):
     if not inline_assets:
         return html_part
 
+    html_content_id = "communication360-html"
+    html_part.add_header("Content-ID", f"<{html_content_id}>")
     related_part = MIMEMultipart("related")
     related_part.set_param("type", "text/html")
+    related_part.set_param("start", f"<{html_content_id}>")
     related_part.attach(html_part)
     for content_id, image_path in inline_assets.items():
         with open(image_path, "rb") as image_file:
